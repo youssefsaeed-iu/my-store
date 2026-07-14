@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>السوق | متجرك الإلكتروني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Aref+Ruqaa:wght@700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #14162b;
+    --surface: #1e2142;
+    --surface-2: #262a52;
+    --gold: #c9a227;
+    --gold-bright: #e0b93a;
+    --teal: #3f8c82;
+    --ink: #f2ede4;
+    --ink-dim: #b9b6c9;
+    --danger: #c0554a;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 500px at 15% -10%, #23264a 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, #23264a 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    min-height:100vh;
+  }
+  .price, .qty, .count{font-family:'IBM Plex Mono', monospace;}
+  a{color:inherit;}
+
+  /* ---------- Header ---------- */
+  header.topbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px;
+    background:rgba(20,22,43,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(201,162,39,0.18);
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Aref Ruqaa', serif;
+    font-size:26px; font-weight:700; color:var(--gold-bright);
+  }
+  .brand-mark{
+    width:34px;height:34px;border-radius:50%;
+    background:conic-gradient(from 200deg, var(--gold), var(--teal), var(--gold));
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Aref Ruqaa', serif; font-size:18px; color:var(--bg);
+  }
+  .search-box{
+    flex:1; max-width:380px; margin:0 24px;
+    position:relative;
+  }
+  .search-box input{
+    width:100%; padding:10px 40px 10px 14px;
+    border-radius:999px; border:1px solid rgba(255,255,255,0.12);
+    background:var(--surface); color:var(--ink); font-family:inherit; font-size:14px;
+    outline:none; transition:border-color .2s;
+  }
+  .search-box input:focus{border-color:var(--gold);}
+  .search-box svg{position:absolute; right:14px; top:50%; transform:translateY(-50%); opacity:0.6;}
+  .cart-btn{
+    display:flex; align-items:center; gap:8px;
+    background:var(--surface-2); border:1px solid rgba(201,162,39,0.35);
+    color:var(--ink); padding:10px 16px; border-radius:999px;
+    cursor:pointer; font-family:'Tajawal'; font-weight:700; font-size:14px;
+    transition:transform .15s, border-color .2s;
+  }
+  .cart-btn:hover{transform:translateY(-1px); border-color:var(--gold);}
+  .cart-count{
+    background:var(--gold); color:#1a1a1a; border-radius:999px;
+    padding:1px 8px; font-size:12px; font-weight:700;
+  }
+
+  @media (max-width:720px){
+    header.topbar{padding:12px 14px; flex-wrap:wrap; gap:10px;}
+    .search-box{order:3; max-width:100%; margin:6px 0 0;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:76px 28px 60px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: repeating-linear-gradient(90deg, rgba(201,162,39,0.06) 0 2px, transparent 2px 90px);
+    pointer-events:none;
+  }
+  .hero-eyebrow{
+    display:inline-block; font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:3px;
+    color:var(--teal); text-transform:uppercase; margin-bottom:14px;
+  }
+  .hero h1{
+    font-family:'Aref Ruqaa', serif; font-weight:700;
+    font-size:clamp(38px, 6vw, 68px); margin:0 0 14px; color:var(--ink);
+    line-height:1.15;
+  }
+  .hero h1 span{color:var(--gold-bright);}
+  .hero p{
+    color:var(--ink-dim); font-size:17px; max-width:560px; margin:0 auto 30px;
+  }
+  .hero-cta{
+    display:inline-flex; gap:14px; flex-wrap:wrap; justify-content:center;
+  }
+  .btn-primary, .btn-ghost{
+    padding:13px 30px; border-radius:999px; border:none; cursor:pointer;
+    font-family:'Tajawal'; font-weight:700; font-size:15px; transition:transform .15s, box-shadow .2s;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg, var(--gold-bright), var(--gold));
+    color:#1a1607; box-shadow:0 6px 20px rgba(201,162,39,0.25);
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 26px rgba(201,162,39,0.35);}
+  .btn-ghost{
+    background:transparent; color:var(--ink); border:1px solid rgba(255,255,255,0.2);
+  }
+  .btn-ghost:hover{border-color:var(--teal); color:var(--teal);}
+
+  /* ---------- Categories ---------- */
+  .categories{
+    display:flex; gap:10px; overflow-x:auto; padding:6px 28px 8px;
+    max-width:1100px; margin:0 auto 8px;
+  }
+  .categories::-webkit-scrollbar{height:4px;}
+  .chip{
+    flex:none; padding:9px 20px; border-radius:999px; cursor:pointer;
+    background:var(--surface); border:1px solid rgba(255,255,255,0.08);
+    color:var(--ink-dim); font-size:14px; font-weight:500; white-space:nowrap;
+    transition:all .18s;
+  }
+  .chip:hover{color:var(--ink);}
+  .chip.active{
+    background:var(--teal); color:#fff; border-color:var(--teal); font-weight:700;
+  }
+
+  /* ---------- Products ---------- */
+  .products{
+    max-width:1100px; margin:20px auto 80px; padding:0 28px;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:22px;
+  }
+  .card{
+    position:relative;
+    background:var(--surface);
+    border-radius:var(--radius);
+    border:1px solid rgba(255,255,255,0.06);
+    padding:18px 16px 16px;
+    display:flex; flex-direction:column; gap:10px;
+    transition:transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 30px rgba(0,0,0,0.35);
+    border-color:rgba(201,162,39,0.3);
+  }
+  .card-visual{
+    height:120px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:44px;
+  }
+  .cat-label{
+    font-size:11px; color:var(--teal); font-weight:700; letter-spacing:.5px;
+  }
+  .card h3{margin:0; font-size:16px; font-weight:700;}
+  .card-footer{
+    display:flex; align-items:center; justify-content:space-between; margin-top:auto;
+  }
+  .tag{
+    position:relative;
+    background:var(--ink); color:#1a1a1a;
+    padding:6px 14px 6px 10px;
+    font-size:14px; font-weight:600;
+    border-radius:3px 10px 10px 3px;
+    transform:rotate(-3deg);
+  }
+  .tag::before{
+    content:""; position:absolute; right:6px; top:50%; transform:translateY(-50%);
+    width:6px;height:6px;border-radius:50%; background:var(--bg);
+  }
+  .card:nth-child(3n) .tag{transform:rotate(2deg);}
+  .card:nth-child(4n) .tag{transform:rotate(-1.5deg);}
+  .add-btn{
+    background:var(--surface-2); border:1px solid rgba(201,162,39,0.3); color:var(--gold-bright);
+    width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:20px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; transition:all .15s;
+  }
+  .add-btn:hover{background:var(--gold); color:#1a1a1a; transform:scale(1.08);}
+
+  /* ---------- Cart Drawer ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:60;
+    opacity:0; pointer-events:none; transition:opacity .25s;
+  }
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .drawer{
+    position:fixed; top:0; bottom:0; left:0; width:min(380px, 92vw);
+    background:var(--surface); z-index:61;
+    transform:translateX(-105%); transition:transform .3s ease;
+    display:flex; flex-direction:column;
+    border-left:1px solid rgba(201,162,39,0.2);
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:20px; border-bottom:1px solid rgba(255,255,255,0.08);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .drawer-head h2{font-family:'Aref Ruqaa'; font-size:22px; margin:0; color:var(--gold-bright);}
+  .close-x{background:none;border:none;color:var(--ink-dim);font-size:22px;cursor:pointer;}
+  .drawer-items{flex:1; overflow-y:auto; padding:14px 20px;}
+  .drawer-empty{color:var(--ink-dim); text-align:center; margin-top:60px; font-size:14px;}
+  .drawer-item{
+    display:flex; gap:12px; align-items:center; padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .drawer-item .emoji{font-size:26px; width:44px;text-align:center;}
+  .drawer-item .info{flex:1;}
+  .drawer-item .info h4{margin:0 0 4px; font-size:14px;}
+  .qty-ctrl{display:flex; align-items:center; gap:8px;}
+  .qty-ctrl button{
+    width:24px;height:24px;border-radius:50%; border:1px solid rgba(255,255,255,0.2);
+    background:transparent; color:var(--ink); cursor:pointer; font-size:14px; line-height:1;
+  }
+  .remove-btn{background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;}
+  .drawer-footer{
+    padding:18px 20px 22px; border-top:1px solid rgba(255,255,255,0.08);
+  }
+  .total-row{display:flex; justify-content:space-between; margin-bottom:14px; font-size:16px; font-weight:700;}
+  .checkout-btn{
+    width:100%; padding:14px; border:none; border-radius:12px; cursor:pointer;
+    background:linear-gradient(135deg, var(--teal), #2c6b62); color:#fff;
+    font-family:'Tajawal'; font-weight:700; font-size:15px;
+  }
+  .checkout-btn:disabled{opacity:0.4; cursor:not-allowed;}
+
+  footer{
+    text-align:center; padding:30px 20px; color:var(--ink-dim); font-size:13px;
+    border-top:1px solid rgba(255,255,255,0.08);
+  }
+  footer a{color:var(--gold-bright); text-decoration:none;}
+
+  ::selection{background:var(--gold); color:#1a1a1a;}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">س</span> السوق</div>
+  <div class="search-box">
+    <input id="searchInput" type="text" placeholder="ابحث عن منتج...">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </div>
+  <button class="cart-btn" onclick="openCart()">
+    🛒 السلة <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <span class="hero-eyebrow">تسوق بثقة · توصيل لكل مكان</span>
+  <h1>كل اللي محتاجه <span>في سوق واحد</span></h1>
+  <p>إلكترونيات، ملابس، أدوات منزلية ومنتجات عناية — اختار منتجك وابعت طلبك في ثانية.</p>
+  <div class="hero-cta">
+    <button class="btn-primary" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">تصفح المنتجات</button>
+    <button class="btn-ghost" onclick="openCart()">عرض السلة</button>
+  </div>
+</section>
+
+<div class="categories" id="categories"></div>
+
+<section class="products" id="shop"></section>
+
+<footer>
+  <p>© 2026 السوق · للتواصل والطلب:
+    <a href="https://wa.me/201207306634" target="_blank">واتساب</a> ·
+    <a href="mailto:store@example.com">store@example.com</a>
+  </p>
+  <p style="opacity:.7">صمم ليتم استضافته على أي خدمة استضافة مجانية.</p>
+</footer>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2>سلة المشتريات</h2>
+    <button class="close-x" onclick="closeCart()">×</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-footer">
+    <div class="total-row"><span>الإجمالي</span><span class="price" id="totalPrice">0 ج.م</span></div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="checkout()">إرسال الطلب عبر واتساب</button>
+  </div>
+</aside>
+
+<script>
+const PRODUCTS = [
+  {id:1, name:"سماعة بلوتوث لاسلكية", cat:"electronics", catLabel:"إلكترونيات", price:450, emoji:"🎧", bg:"#2b2f5a"},
+  {id:2, name:"باور بانك 20000 مللي", cat:"electronics", catLabel:"إلكترونيات", price:520, emoji:"🔋", bg:"#2b2f5a"},
+  {id:3, name:"ساعة ذكية رياضية", cat:"electronics", catLabel:"إلكترونيات", price:980, emoji:"⌚", bg:"#2b2f5a"},
+  {id:4, name:"قميص قطن رجالي", cat:"clothing", catLabel:"ملابس", price:280, emoji:"👕", bg:"#4a2f3a"},
+  {id:5, name:"جاكيت شتوي دافئ", cat:"clothing", catLabel:"ملابس", price:650, emoji:"🧥", bg:"#4a2f3a"},
+  {id:6, name:"حذاء رياضي", cat:"clothing", catLabel:"ملابس", price:720, emoji:"👟", bg:"#4a2f3a"},
+  {id:7, name:"طقم أواني طهي", cat:"home", catLabel:"منزل ومطبخ", price:1150, emoji:"🍳", bg:"#2f4a3a"},
+  {id:8, name:"مصباح مكتب LED", cat:"home", catLabel:"منزل ومطبخ", price:210, emoji:"💡", bg:"#2f4a3a"},
+  {id:9, name:"غطاء سرير مزدوج", cat:"home", catLabel:"منزل ومطبخ", price:390, emoji:"🛏️", bg:"#2f4a3a"},
+  {id:10, name:"سيروم عناية بالبشرة", cat:"beauty", catLabel:"جمال وعناية", price:230, emoji:"🧴", bg:"#4a3f2f"},
+  {id:11, name:"طقم فرش مكياج", cat:"beauty", catLabel:"جمال وعناية", price:180, emoji:"💄", bg:"#4a3f2f"},
+  {id:12, name:"عطر فاخر 100 مل", cat:"beauty", catLabel:"جمال وعناية", price:610, emoji:"🌸", bg:"#4a3f2f"},
+];
+
+const CATEGORIES = [
+  {id:"all", label:"الكل"},
+  {id:"electronics", label:"إلكترونيات"},
+  {id:"clothing", label:"ملابس"},
+  {id:"home", label:"منزل ومطبخ"},
+  {id:"beauty", label:"جمال وعناية"},
+];
+
+let activeCat = "all";
+let searchTerm = "";
+let cart = JSON.parse(localStorage.getItem("souk_cart") || "{}");
+
+function saveCart(){
+  localStorage.setItem("souk_cart", JSON.stringify(cart));
+  renderCartCount();
+}
+
+function renderCategories(){
+  const el = document.getElementById("categories");
+  el.innerHTML = CATEGORIES.map(c => `<div class="chip ${c.id===activeCat?'active':''}" onclick="setCategory('${c.id}')">${c.label}</div>`).join("");
+}
+
+function setCategory(id){
+  activeCat = id;
+  renderCategories();
+  renderProducts();
+}
+
+function renderProducts(){
+  const el = document.getElementById("shop");
+  const filtered = PRODUCTS.filter(p =>
+    (activeCat==="all" || p.cat===activeCat) &&
+    (p.name.includes(searchTerm))
+  );
+  if(filtered.length===0){
+    el.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--ink-dim);padding:40px 0;">لا توجد منتجات مطابقة</div>`;
+    return;
+  }
+  el.innerHTML = filtered.map(p => `
+    <div class="card">
+      <div class="card-visual" style="background:${p.bg}">${p.emoji}</div>
+      <span class="cat-label">${p.catLabel}</span>
+      <h3>${p.name}</h3>
+      <div class="card-footer">
+        <span class="tag price">${p.price} ج.م</span>
+        <button class="add-btn" onclick="addToCart(${p.id})">+</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function addToCart(id){
+  cart[id] = (cart[id]||0) + 1;
+  saveCart();
+  renderDrawer();
+}
+
+function changeQty(id, delta){
+  cart[id] = (cart[id]||0) + delta;
+  if(cart[id]<=0) delete cart[id];
+  saveCart();
+  renderDrawer();
+}
+
+function removeItem(id){
+  delete cart[id];
+  saveCart();
+  renderDrawer();
+}
+
+function renderCartCount(){
+  const count = Object.values(cart).reduce((a,b)=>a+b, 0);
+  document.getElementById("cartCount").textContent = count;
+}
+
+function renderDrawer(){
+  const el = document.getElementById("drawerItems");
+  const ids = Object.keys(cart);
+  if(ids.length===0){
+    el.innerHTML = `<div class="drawer-empty">السلة فارغة حالياً<br>ابدأ التسوق وأضف منتجاتك المفضلة</div>`;
+    document.getElementById("totalPrice").textContent = "0 ج.م";
+    document.getElementById("checkoutBtn").disabled = true;
+    return;
+  }
+  let total = 0;
+  el.innerHTML = ids.map(id => {
+    const p = PRODUCTS.find(x=>x.id==id);
+    const qty = cart[id];
+    total += p.price * qty;
+    return `
+      <div class="drawer-item">
+        <div class="emoji">${p.emoji}</div>
+        <div class="info">
+          <h4>${p.name}</h4>
+          <div class="qty-ctrl">
+            <button onclick="changeQty(${p.id},-1)">−</button>
+            <span class="qty">${qty}</span>
+            <button onclick="changeQty(${p.id},1)">+</button>
+          </div>
+        </div>
+        <div style="text-align:left;">
+          <div class="price" style="font-size:14px;">${p.price*qty} ج.م</div>
+          <button class="remove-btn" onclick="removeItem(${p.id})">حذف</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+  document.getElementById("totalPrice").textContent = total + " ج.م";
+  document.getElementById("checkoutBtn").disabled = false;
+}
+
+function openCart(){
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("overlay").classList.add("open");
+  renderDrawer();
+}
+function closeCart(){
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("overlay").classList.remove("open");
+}
+
+function checkout(){
+  const ids = Object.keys(cart);
+  if(ids.length===0) return;
+  let lines = ["مرحباً، أريد طلب المنتجات التالية:"];
+  let total = 0;
+  ids.forEach(id=>{
+    const p = PRODUCTS.find(x=>x.id==id);
+    const qty = cart[id];
+    total += p.price*qty;
+    lines.push(`- ${p.name} × ${qty} = ${p.price*qty} ج.م`);
+  });
+  lines.push(`الإجمالي: ${total} ج.م`);
+  const message = encodeURIComponent(lines.join("\n"));
+  window.open(`https://wa.me/201207306634?text=${message}`, "_blank");
+}
+
+document.getElementById("searchInput").addEventListener("input", (e)=>{
+  searchTerm = e.target.value.trim();
+  renderProducts();
+});
+
+renderCategories();
+renderProducts();
+renderCartCount();
+</script>
+
+</body>
+</html>
