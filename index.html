@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -34,7 +34,6 @@
   .price, .qty, .count{font-family:'IBM Plex Mono', monospace;}
   a{color:inherit;}
 
-  /* ---------- Header ---------- */
   header.topbar{
     position:sticky; top:0; z-index:40;
     display:flex; align-items:center; justify-content:space-between;
@@ -84,7 +83,6 @@
     .search-box{order:3; max-width:100%; margin:6px 0 0;}
   }
 
-  /* ---------- Hero ---------- */
   .hero{
     position:relative;
     padding:76px 28px 60px;
@@ -127,7 +125,6 @@
   }
   .btn-ghost:hover{border-color:var(--teal); color:var(--teal);}
 
-  /* ---------- Categories ---------- */
   .categories{
     display:flex; gap:10px; overflow-x:auto; padding:6px 28px 8px;
     max-width:1100px; margin:0 auto 8px;
@@ -144,7 +141,6 @@
     background:var(--teal); color:#fff; border-color:var(--teal); font-weight:700;
   }
 
-  /* ---------- Products ---------- */
   .products{
     max-width:1100px; margin:20px auto 80px; padding:0 28px;
     display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:22px;
@@ -196,7 +192,6 @@
   }
   .add-btn:hover{background:var(--gold); color:#1a1a1a; transform:scale(1.08);}
 
-  /* ---------- Cart Drawer ---------- */
   .overlay{
     position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:60;
     opacity:0; pointer-events:none; transition:opacity .25s;
